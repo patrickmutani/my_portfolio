@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="./css/style.css">
   </head>
   <body>
-
     <header>
       <div class="container">
         <div class="header-content">
@@ -440,17 +439,20 @@
             <p class="contact-title">What's Next?</p>
             <h2 class="contact-heading">Get In Touch</h2>
             <p class="contact-text">
-              Whether you have a question or just want to say hi, I'll be more than happy to get
-              back to you!
+              Whether it's a quick message or a detailed inquiry, I'll be more than happy to get
+              back to you — I'm always open to opportunities, collaborations, or just a friendly hello!
             </p>
-            <a href="mailto:patrickmathina335@gmail.com" class="cta-button"
-              >Say Hello</a
-            >
+            <a href="https://wa.me/254799858285" target="_blank" class="cta-button">
+            💬 WhatsApp
+            </a> 
+            <a id="gmail-button" href="#" class="cta-button">✉️ GMail</a>
           </div>
         </div>
       </section>
-    </main>
+    </div>
+  </section>
 
+  </main>
     <footer>
       <div class="container">
         <ul class="social-links">
@@ -718,13 +720,34 @@
       });
 
       // Smooth scroll to top when back-to-top arrow is clicked
-      document.querySelector('.back-to-top').addEventListener('click', function (e) {
-        e.preventDefault();
-        window.scrollTo({
-          top: 0,
-          behavior: 'smooth',
+        document.querySelector('.back-to-top').addEventListener('click', function (e) {
+          e.preventDefault();
+          window.scrollTo({
+            top: 0,
+            behavior: 'smooth',
+          });
         });
-      });
+
+        // Device-aware Gmail link handler
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+        const gmailButton = document.getElementById('gmail-button');
+
+        const email = "patrickmathina335@gmail.com";
+
+        if (gmailButton) {
+          gmailButton.addEventListener("click", function (e) {
+            e.preventDefault();
+
+            if (isMobile) {
+              window.location.href = `mailto:${email}`;
+            } else {
+              window.open(
+                `https://mail.google.com/mail/?view=cm&fs=1&to=${email}`,
+                "_blank"
+              );
+            }
+          });
+        }
     </script>
   </body>
 </html>

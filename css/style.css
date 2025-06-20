@@ -191,6 +191,10 @@ body.light-mode .hero-description {
   transition: all 0.3s;
 }
 
+.cta-button + .cta-button {
+  margin-left: 1rem;
+}
+
 body.light-mode .cta-button {
   border: 2px solid var(--highlight-light);
   color: var(--highlight-light);
