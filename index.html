@@ -716,6 +716,15 @@
       window.addEventListener("load", () => {
         setTimeout(typeWriter, 1000);
       });
+
+      // Smooth scroll to top when back-to-top arrow is clicked
+      document.querySelector('.back-to-top').addEventListener('click', function (e) {
+        e.preventDefault();
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth',
+        });
+      });
     </script>
   </body>
 </html>
