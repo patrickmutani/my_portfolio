@@ -450,7 +450,7 @@
             <!-- <a href="https://wa.me/254799858285" target="_blank" class="cta-button">
             💬 WhatsApp
             </a>  -->
-            <a id="gmail-button" href="#" class="cta-button">✉️ GMail</a>
+            <a id="gmail-button" href="mailto:patrickmathina335@gmail.com" class="cta-button">✉️ GMail</a>
           </div>
         </div>
       </section>
@@ -734,20 +734,42 @@
         });
 
         // Device-aware Gmail link handler
+        // const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+        // const gmailButton = document.getElementById('gmail-button');
+
+        // const email = "patrickmathina335@gmail.com";
+
+        // if (gmailButton) {
+        //   gmailButton.addEventListener("click", function (e) {
+        //     e.preventDefault();
+
+        //     if (isMobile) {
+        //       window.location.href = `mailto:${email}`;
+        //     } else {
+        //       window.open(
+        //         `https://mail.google.com/mail/?view=cm&fs=1&to=${email}`,
+        //         "_blank"
+        //       );
+        //     }
+        //   });
+        // }
+
         const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
         const gmailButton = document.getElementById('gmail-button');
 
         const email = "patrickmathina335@gmail.com";
+        const subject = encodeURIComponent("Potential Collaboration – Inspired by Your Portfolio");
+        const email_body = encodeURIComponent("Hi Patrick,\n\nI came across your portfolio and would love to connect.");
 
         if (gmailButton) {
           gmailButton.addEventListener("click", function (e) {
-            e.preventDefault();
+            e.preventDefault(); 
 
             if (isMobile) {
-              window.location.href = `mailto:${email}`;
+              window.location.href = `mailto:${email}?subject=${subject}&body=${email_body}`;
             } else {
               window.open(
-                `https://mail.google.com/mail/?view=cm&fs=1&to=${email}`,
+                `https://mail.google.com/mail/?view=cm&fs=1&to=${email}&su=${subject}&body=${email_body}`,
                 "_blank"
               );
             }
