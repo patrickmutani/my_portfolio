@@ -40,7 +40,7 @@
           <div class="hero-content">
             <p class="hero-subtitle">Hi, my name is</p>
             <h1 class="hero-title">PATRICK MUTANI.</h1>
-            <h2 class="hero-title">Agile, detail-oriented software developer.</h2>
+            <h2 class="hero-subtitle-title">Agile, detail-oriented software developer.</h2>
             <p class="hero-description">
               I'm a software developer skilled in building scalable backend systems, hybrid apps, and user-friendly web/mobile applications. 
               Backed by real-world experience in fintech platforms impacting over 33+ financial institutions in Kenya and abroad. 
@@ -705,8 +705,9 @@
         }
       });
 
-      // Typing effect for hero title
-      const heroTitle = document.querySelector(".hero-title:nth-child(3)");
+      // Typing effect for hero subtitle title
+      const heroTitle = document.querySelector(".hero-subtitle-title");
+      // const heroTitle = document.querySelector(".hero-title:nth-child(3)");
       const originalText = heroTitle.textContent;
       heroTitle.textContent = "";
 
@@ -715,7 +716,7 @@
         if (i < originalText.length) {
           heroTitle.textContent += originalText.charAt(i);
           i++;
-          setTimeout(typeWriter, 100);
+          setTimeout(typeWriter, 70);
         }
       };
 
