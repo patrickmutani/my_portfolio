@@ -161,14 +161,14 @@ body.light-mode .hero-subtitle {
 }
 
 .hero-title {
-  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-size: clamp(2rem, 5vw, 3rem);
   font-weight: bold;
   margin-bottom: 1rem;
   line-height: 1.1;
 }
 
   .hero-subtitle-title {
-  font-size: clamp(1.2rem, 4vw, 2.5rem);
+  font-size: clamp(2rem, 4vw, 3rem);
   font-weight: bold;
   color: var(--text-dark);
   line-height: 1.1;
