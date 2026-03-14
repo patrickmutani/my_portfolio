@@ -980,6 +980,16 @@ body.light-mode .modal-close {
     padding: 1.5rem;
     margin: 1rem;
   }
+
+  .contact .cta-button {
+    display: block;
+    margin: 0.75rem auto;
+    width: fit-content;
+  }
+
+  .contact .cta-button + .cta-button {
+    margin-left: auto;
+  }
 }
 
 @media (max-width: 480px) {
