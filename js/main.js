@@ -27,47 +27,6 @@
     });
   }
 
-  /* ---------- Hero name: letter-by-letter reveal ---------- */
-  const heroName = document.querySelector(".hero-name");
-  if (heroName && !reduceMotion) {
-    let i = 0;
-    heroName.querySelectorAll(".word").forEach((word) => {
-      [...word.childNodes].forEach((node) => {
-        if (node.nodeType === Node.TEXT_NODE) {
-          const frag = document.createDocumentFragment();
-          [...node.textContent].forEach((char) => {
-            const span = document.createElement("span");
-            span.className = "ch";
-            span.style.setProperty("--i", i++);
-            span.textContent = char;
-            span.setAttribute("aria-hidden", "true");
-            frag.appendChild(span);
-          });
-          word.replaceChild(frag, node);
-        } else if (node.classList && node.classList.contains("dot")) {
-          node.classList.add("ch");
-          node.style.setProperty("--i", i++);
-        }
-      });
-    });
-    heroName.classList.add("is-split");
-  }
-
-  /* ---------- Hero role: typing effect (as on the original site) ---------- */
-  const typed = document.querySelector(".hero-role .typed");
-  if (typed && !reduceMotion) {
-    const fullText = typed.textContent.trim();
-    typed.textContent = "";
-    let pos = 0;
-    const type = () => {
-      if (pos < fullText.length) {
-        typed.textContent += fullText.charAt(pos++);
-        setTimeout(type, 55);
-      }
-    };
-    setTimeout(type, 1100);
-  }
-
   /* ---------- Header state, progress bar, back-to-top, timeline ---------- */
   const header = document.querySelector(".site-header");
   const progress = document.querySelector(".scroll-progress");
@@ -159,8 +118,11 @@
       const section = document.getElementById(id);
       if (section) spy.observe(section);
     });
-    const hero = document.getElementById("top");
-    if (hero) spy.observe(hero);
+    // Clear the highlight on the welcome screen and the résumé band (not in the nav)
+    ["top", "resume"].forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) spy.observe(el);
+    });
   }
 
   /* ---------- Reveal on scroll ---------- */
