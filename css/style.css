@@ -1357,44 +1357,18 @@ section[id] {
 
 .card.span-2 {
   grid-column: span 2;
-  flex-direction: row;
 }
 
-.card.span-2.flip {
-  flex-direction: row-reverse;
-}
-
+/* Wide cards keep the animation on top; it absorbs any extra row height
+   so the text never sits above an empty gap */
 .card.span-2 .card-visual {
-  flex: 1.05;
+  flex: 1 0 auto;
   height: auto;
-  min-height: 250px;
-  border-bottom: 0;
-  border-right: 1px solid var(--border);
-}
-
-.card.span-2.flip .card-visual {
-  border-right: 0;
-  border-left: 1px solid var(--border);
+  min-height: 210px;
 }
 
 .card.span-2 .card-body {
-  flex: 1;
-  justify-content: center;
-  padding: 1.75rem 1.9rem;
-}
-
-.card.span-2 .card-body .tags {
-  margin-top: 0.4rem;
-}
-
-.card.span-2 .viz-score {
-  flex-direction: column;
-  gap: 1.25rem;
-  max-width: 300px;
-}
-
-.card.span-2 .viz-score .batch {
-  width: 100%;
+  flex: none;
 }
 
 .card-visual {
@@ -2609,25 +2583,6 @@ dialog.case::backdrop {
 
   .timeline-item + .timeline-item {
     margin-top: 0;
-  }
-
-  .card.span-2,
-  .card.span-2.flip {
-    flex-direction: column;
-  }
-
-  .card.span-2 .card-visual,
-  .card.span-2.flip .card-visual {
-    flex: none;
-    height: 210px;
-    min-height: 0;
-    border: 0;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .card.span-2 .viz-score {
-    flex-direction: row;
-    max-width: 520px;
   }
 
   .timeline-dot,
