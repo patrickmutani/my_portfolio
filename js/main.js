@@ -3,6 +3,7 @@
 
   const root = document.documentElement;
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const finePointer = window.matchMedia("(pointer: fine)").matches;
 
   /* ---------- Theme ---------- */
   const themeBtn = document.querySelector(".theme-toggle");
@@ -13,7 +14,7 @@
     if (themeBtn) {
       themeBtn.setAttribute("aria-label", theme === "dark" ? "Switch to light theme" : "Switch to dark theme");
     }
-    if (metaTheme) metaTheme.setAttribute("content", theme === "dark" ? "#0a0b0d" : "#f6f6f3");
+    if (metaTheme) metaTheme.setAttribute("content", theme === "dark" ? "#0a192f" : "#e6f1ff");
   };
 
   applyTheme(root.getAttribute("data-theme") === "light" ? "light" : "dark");
@@ -26,18 +27,73 @@
     });
   }
 
-  /* ---------- Header state, progress bar, back-to-top ---------- */
+  /* ---------- Hero name: letter-by-letter reveal ---------- */
+  const heroName = document.querySelector(".hero-name");
+  if (heroName && !reduceMotion) {
+    let i = 0;
+    heroName.querySelectorAll(".word").forEach((word) => {
+      [...word.childNodes].forEach((node) => {
+        if (node.nodeType === Node.TEXT_NODE) {
+          const frag = document.createDocumentFragment();
+          [...node.textContent].forEach((char) => {
+            const span = document.createElement("span");
+            span.className = "ch";
+            span.style.setProperty("--i", i++);
+            span.textContent = char;
+            span.setAttribute("aria-hidden", "true");
+            frag.appendChild(span);
+          });
+          word.replaceChild(frag, node);
+        } else if (node.classList && node.classList.contains("dot")) {
+          node.classList.add("ch");
+          node.style.setProperty("--i", i++);
+        }
+      });
+    });
+    heroName.classList.add("is-split");
+  }
+
+  /* ---------- Hero role: typing effect (as on the original site) ---------- */
+  const typed = document.querySelector(".hero-role .typed");
+  if (typed && !reduceMotion) {
+    const fullText = typed.textContent.trim();
+    typed.textContent = "";
+    let pos = 0;
+    const type = () => {
+      if (pos < fullText.length) {
+        typed.textContent += fullText.charAt(pos++);
+        setTimeout(type, 55);
+      }
+    };
+    setTimeout(type, 1100);
+  }
+
+  /* ---------- Header state, progress bar, back-to-top, timeline ---------- */
   const header = document.querySelector(".site-header");
   const progress = document.querySelector(".scroll-progress");
   const toTop = document.querySelector(".back-to-top");
+  const timeline = document.querySelector(".timeline");
+  const timelineItems = timeline ? [...timeline.querySelectorAll(".timeline-item")] : [];
   let ticking = false;
 
   const onScroll = () => {
     const y = window.scrollY;
-    const max = root.scrollHeight - window.innerHeight;
+    const vh = window.innerHeight;
+    const max = root.scrollHeight - vh;
     header.classList.toggle("is-scrolled", y > 8);
     toTop.classList.toggle("is-visible", y > 700);
     progress.style.setProperty("--progress", max > 0 ? Math.min(y / max, 1).toFixed(4) : "0");
+
+    if (timeline) {
+      const r = timeline.getBoundingClientRect();
+      const trigger = vh * 0.62;
+      const fill = Math.min(Math.max((trigger - r.top) / r.height, 0), 1);
+      timeline.style.setProperty("--fill", fill.toFixed(4));
+      timelineItems.forEach((item) => {
+        const dot = item.querySelector(".timeline-dot");
+        if (dot) item.classList.toggle("is-lit", dot.getBoundingClientRect().top < trigger);
+      });
+    }
     ticking = false;
   };
 
@@ -47,7 +103,17 @@
       ticking = true;
     }
   }, { passive: true });
+  window.addEventListener("resize", onScroll, { passive: true });
   onScroll();
+
+  /* ---------- Cursor spotlight ---------- */
+  const spotlight = document.querySelector(".spotlight");
+  if (spotlight && finePointer && !reduceMotion) {
+    window.addEventListener("pointermove", (e) => {
+      spotlight.style.setProperty("--cx", `${e.clientX}px`);
+      spotlight.style.setProperty("--cy", `${e.clientY}px`);
+    }, { passive: true });
+  }
 
   /* ---------- Mobile navigation ---------- */
   const nav = document.getElementById("primary-nav");
@@ -56,7 +122,6 @@
   const setNav = (open) => {
     nav.classList.toggle("is-open", open);
     navToggle.setAttribute("aria-expanded", String(open));
-    navToggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
   };
 
   navToggle.addEventListener("click", (e) => {
@@ -94,11 +159,8 @@
       const section = document.getElementById(id);
       if (section) spy.observe(section);
     });
-    // Clear the highlight when back in the hero (or on the résumé band)
-    ["top", "resume"].forEach((id) => {
-      const el = document.getElementById(id);
-      if (el) spy.observe(el);
-    });
+    const hero = document.getElementById("top");
+    if (hero) spy.observe(hero);
   }
 
   /* ---------- Reveal on scroll ---------- */
@@ -117,8 +179,32 @@
     revealEls.forEach((el) => io.observe(el));
   }
 
+  /* ---------- Count-up numbers ---------- */
+  const counters = document.querySelectorAll("[data-count]");
+  if (counters.length && !reduceMotion && "IntersectionObserver" in window) {
+    const countIo = new IntersectionObserver((entries, obs) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        obs.unobserve(entry.target);
+        const el = entry.target;
+        const target = Number(el.dataset.count);
+        const duration = 1600;
+        const start = performance.now();
+        const step = (now) => {
+          const t = Math.min((now - start) / duration, 1);
+          const eased = 1 - Math.pow(1 - t, 3);
+          el.textContent = String(Math.round(target * eased));
+          if (t < 1) requestAnimationFrame(step);
+        };
+        el.textContent = "0";
+        requestAnimationFrame(step);
+      });
+    }, { threshold: 0.6 });
+    counters.forEach((el) => countIo.observe(el));
+  }
+
   /* ---------- Card spotlight ---------- */
-  if (!reduceMotion) {
+  if (finePointer && !reduceMotion) {
     document.querySelectorAll(".card").forEach((card) => {
       card.addEventListener("pointermove", (e) => {
         const r = card.getBoundingClientRect();
@@ -128,7 +214,7 @@
     });
   }
 
-  /* ---------- Case-study dialogs ---------- */
+  /* ---------- Project modals ---------- */
   let lastTrigger = null;
 
   document.querySelectorAll("[data-dialog]").forEach((btn) => {
@@ -146,7 +232,7 @@
       document.body.classList.remove("modal-open");
       if (lastTrigger) lastTrigger.focus();
     });
-    // A click on the backdrop (outside the content) closes the dialog
+    // A click on the backdrop (outside the content) closes the modal
     dialog.addEventListener("click", (e) => {
       if (e.target === dialog) dialog.close();
     });
@@ -154,7 +240,7 @@
     if (closeBtn) closeBtn.addEventListener("click", () => dialog.close());
   });
 
-  /* ---------- Email: Gmail compose on desktop, mail app on mobile ----------
+  /* ---------- Gmail: compose window on desktop, mail app on mobile ----------
      The address is read from the button's own mailto: link, so it lives in one place. */
   const gmailButton = document.getElementById("gmail-button");
   if (gmailButton) {
