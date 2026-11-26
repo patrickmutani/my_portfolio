@@ -729,9 +729,10 @@ main,
   animation: float 6s ease-in-out infinite;
 }
 
+/* Sits above the photo's top edge so it never covers the face */
 .fc-top {
   right: -2.25rem;
-  top: 1.75rem;
+  top: -3.25rem;
 }
 
 .fc-bottom {
@@ -2636,7 +2637,7 @@ dialog.case::backdrop {
 
   .fc-top {
     right: -14%;
-    top: 1rem;
+    top: -3rem;
   }
 
   .fc-bottom {
